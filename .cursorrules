@@ -1,0 +1,95 @@
+# Project Overview
+
+Club Companion is a web-based platform designed to help University of Florida (UF) students discover and engage with clubs that match their interests. The platform provides personalized club recommendations, a searchable club database, and a discussion forum for club events and announcements.
+
+## Goals
+
+1. Improve student engagement and club participation.
+2. Streamline the club discovery process with an intelligent matching algorithm.
+3. Provide clubs with an easy way to advertise events and attract members.
+4. Ensure data security and privacy for all users.
+
+## Personality
+
+The project should maintain a user-friendly and professional tone. The UI should be clean and intuitive, ensuring ease of navigation. AI suggestions should prioritize security, efficiency, and performance.
+
+## Tech Stack
+
+- **Frontend**: Next.js (React with TypeScript)
+- **Backend**: FastAPI (Python)
+- **Database**: PostgreSQL
+- **State Management**: React Context API or Zustand
+- **Styling**: CSS Modules / TailwindCSS
+- **Version Control**: GitHub
+- **Task Management**: Jira
+
+## Development Guidelines
+
+### Code Style
+- Follow best practices for TypeScript, Python, and SQL.
+- Use meaningful variable names and detailed comments where necessary.
+
+### Security
+- Encrypt sensitive user data.
+- Implement authentication and follow OWASP best practices.
+
+### Performance
+- Optimize queries, minimize re-renders in React, and cache frequently accessed data.
+
+### Testing
+- Unit tests for components and API endpoints.
+- Integration tests where applicable.
+
+### Deployment
+- Use automated CI/CD pipelines.
+- Ensure zero-downtime updates.
+
+## Features
+
+### Student Profile Creation
+- Users create profiles with their UF email, major, and at least three interests.
+- Profiles are private by default.
+
+### Club Matching Algorithm
+- An AI-driven algorithm suggests clubs based on user interests and engagement.
+
+### Club Discovery Search
+- Students can search for clubs manually using keywords, categories, and filters.
+
+### Club Event Forum
+- Clubs can post announcements, events, and updates.
+- Event RSVP and notifications are included.
+
+### Security & Privacy
+- Sensitive data is encrypted.
+- Clubs can only see user profiles if the user interacts first.
+
+## Risk Management
+
+### Data Security
+- Use encryption, access control, and multi-factor authentication.
+- Conduct regular audits.
+
+### Club Participation
+- Encourage clubs to join by demonstrating clear platform benefits.
+
+### Algorithm Accuracy
+- Refine recommendations based on user feedback and real-time data analysis.
+
+### Platform Reliability
+- Implement automated testing, monitoring, and recovery strategies.
+
+## Task Prioritization
+
+### High Priority
+- Refining the user matching algorithm.
+- Ensuring secure authentication.
+- Setting up API endpoints.
+
+### Medium Priority
+- UI improvements.
+- Enhancing search functionality.
+- Improving club engagement features.
+
+### Low Priority
+- Additional analytics and optional customization features.

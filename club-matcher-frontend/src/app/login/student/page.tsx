@@ -2,15 +2,42 @@
 import { useState } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function StudentLogin() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement login logic here
-    console.log('Student login attempt:', { email, password });
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/login/student', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || 'Login failed');
+      }
+
+      // Login successful
+      router.push('/dashboard/student');
+    } catch (err) {
+      setError('Incorrect email or password');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -27,6 +54,9 @@ export default function StudentLogin() {
         </Link>
         <div className={styles.loginContainer}>
           <h1>Student Login</h1>
+          
+          {error && <div className={styles.error}>{error}</div>}
+
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.formGroup}>
               <label htmlFor="email">Email</label>
@@ -48,8 +78,12 @@ export default function StudentLogin() {
                 required
               />
             </div>
-            <button type="submit" className={styles.submitButton}>
-              Login
+            <button 
+              type="submit" 
+              className={styles.submitButton}
+              disabled={isLoading}
+            >
+              {isLoading ? 'Logging in...' : 'Login'}
             </button>
           </form>
         </div>

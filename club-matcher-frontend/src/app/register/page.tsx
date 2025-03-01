@@ -2,28 +2,72 @@
 import { useState } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+interface RegisterData {
+  email: string;
+  password: string;
+  name: string;
+  description?: string;
+  interests: string[];
+}
 
 export default function Register() {
+  const router = useRouter();
   const [isClub, setIsClub] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     confirmPassword: '',
     name: '',
+    description: '',
     interests: ''
   });
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement registration logic
-    console.log('Registration attempt:', { isClub, ...formData });
-  };
+    setError('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    // Convert comma-separated interests to array
+    const interests = formData.interests.split(',').map(i => i.trim()).filter(i => i);
+
+    const registerData: RegisterData = {
+      email: formData.email,
+      password: formData.password,
+      name: formData.name,
+      interests: interests
+    };
+
+    if (isClub && formData.description) {
+      registerData.description = formData.description;
+    }
+
+    try {
+      const response = await fetch(`/api/register/${isClub ? 'club' : 'student'}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(registerData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || 'Registration failed');
+      }
+
+      // Registration successful
+      router.push(`/login/${isClub ? 'club' : 'student'}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Registration failed');
+    }
   };
 
   return (
@@ -52,15 +96,16 @@ export default function Register() {
             <span className={isClub ? styles.activeType : styles.accountType}>Club</span>
           </div>
 
+          {error && <div className={styles.error}>{error}</div>}
+
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.formGroup}>
-              <label htmlFor="email">Email</label>
+              <label htmlFor="email">Email {!isClub && "(UF email required)"}</label>
               <input
                 type="email"
                 id="email"
-                name="email"
                 value={formData.email}
-                onChange={handleChange}
+                onChange={(e) => setFormData({...formData, email: e.target.value})}
                 required
               />
             </div>
@@ -70,10 +115,33 @@ export default function Register() {
               <input
                 type="text"
                 id="name"
-                name="name"
                 value={formData.name}
-                onChange={handleChange}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
                 required
+              />
+            </div>
+
+            {isClub && (
+              <div className={styles.formGroup}>
+                <label htmlFor="description">Club Description</label>
+                <textarea
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                />
+              </div>
+            )}
+
+            <div className={styles.formGroup}>
+              <label htmlFor="interests">
+                {isClub ? 'Club Keywords (separate with commas)' : 'Interests (separate with commas)'}
+              </label>
+              <textarea
+                id="interests"
+                value={formData.interests}
+                onChange={(e) => setFormData({...formData, interests: e.target.value})}
+                required
+                placeholder="e.g., Technology, Sports, Art"
               />
             </div>
 
@@ -82,9 +150,8 @@ export default function Register() {
               <input
                 type="password"
                 id="password"
-                name="password"
                 value={formData.password}
-                onChange={handleChange}
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
                 required
               />
             </div>
@@ -94,25 +161,9 @@ export default function Register() {
               <input
                 type="password"
                 id="confirmPassword"
-                name="confirmPassword"
                 value={formData.confirmPassword}
-                onChange={handleChange}
+                onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
                 required
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="interests">
-                {isClub ? 'Club Keywords (separate with commas)' : 'Interests (separate with commas)'}
-              </label>
-              <textarea
-                id="interests"
-                name="interests"
-                value={formData.interests}
-                onChange={handleChange}
-                required
-                rows={3}
-                placeholder={isClub ? 'e.g., Technology, Programming, Gaming' : 'e.g., Coding, Sports, Music'}
               />
             </div>
 
