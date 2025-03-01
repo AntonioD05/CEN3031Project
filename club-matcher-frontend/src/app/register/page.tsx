@@ -29,6 +29,12 @@ export default function Register() {
     e.preventDefault();
     setError('');
 
+    // Add UF email validation for students
+    if (!isClub && !formData.email.endsWith('@ufl.edu')) {
+      setError('Please use a valid UF email address (@ufl.edu)');
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return;
