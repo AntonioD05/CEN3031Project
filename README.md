@@ -21,6 +21,7 @@ Install PostgreSQL manually and run:
 ```bash
 psql -U your_username -d clubmatcher -f schema.sql
 ```
+Create a `.env` file in the root directory using `.env.example` as a template:
 
 ## 2. Set Up and Run the FastAPI Backend
 
